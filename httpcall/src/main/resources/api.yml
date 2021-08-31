@@ -1,0 +1,290 @@
+openapi: 3.0.1
+info:
+  title: Ping API Specification
+  version: "1.0"
+servers:
+  - url: /
+tags:
+  - name: ping-controller
+    description: Ping Controller
+paths:
+  /ping/create:
+    post:
+      tags:
+        - ping-controller
+      summary: createPing
+      operationId: createPing
+      requestBody:
+        description: info
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PingSaveRequest'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/PingResponse'
+        201:
+          description: Created
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+      deprecated: false
+      x-codegen-request-body-name: info
+  /ping/delete:
+    delete:
+      tags:
+        - ping-controller
+      summary: deletePing
+      operationId: deletePing
+      parameters:
+        - name: id
+          in: query
+          description: id
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        204:
+          description: No Content
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+      deprecated: false
+  /ping/get:
+    get:
+      tags:
+        - ping-controller
+      summary: getById
+      operationId: getById
+      parameters:
+        - name: id
+          in: query
+          description: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/PingResponse'
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+      deprecated: false
+  /ping/search:
+    post:
+      tags:
+        - ping-controller
+      summary: searchPings
+      operationId: searchPings
+      requestBody:
+        description: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PingSearchRequest'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/PingSearchResponse'
+        201:
+          description: Created
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+      deprecated: false
+      x-codegen-request-body-name: request
+  /ping/update:
+    post:
+      tags:
+        - ping-controller
+      summary: updatePing
+      operationId: updatePing
+      requestBody:
+        description: info
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PingSaveRequest'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        201:
+          description: Created
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+      deprecated: false
+      x-codegen-request-body-name: info
+components:
+  schemas:
+    BaseResponse:
+      title: BaseResponse
+      type: object
+      properties:
+        code:
+          type: string
+        data:
+          type: object
+        errorData:
+          type: object
+          properties: { }
+        status:
+          type: string
+          enum:
+            - OK
+            - ERROR
+        type:
+          type: string
+          enum:
+            - SYS
+            - GENERAL
+            - VALID
+    PagingRequest:
+      title: PagingRequest
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page, >= 1, default 1
+          default: 1
+          format: int32
+        rows:
+          type: integer
+          description: page size, >= 1, default 20
+          default: 20
+          format: int32
+    PingSaveRequest:
+      title: PingSaveRequest
+      type: object
+      properties:
+        body:
+          type: object
+          $ref: '#/components/schemas/PingVo'
+    PingVo:
+      title: PingVo
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        val:
+          type: string
+        pinId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        modifiedAt:
+          type: string
+          format: date-time
+    PingResponse:
+      title: PingResponse
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        val:
+          type: string
+        pinId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        modifiedAt:
+          type: string
+          format: date-time
+    PingSearchRequest:
+      title: PingSearchRequest
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page, >= 1, default 1
+          default: 1
+          format: int32
+        rows:
+          type: integer
+          description: page size, >= 1, default 20
+          default: 20
+          format: int32
+        name:
+          type: string
+    PingSearchResponse:
+      title: PingSearchResponse
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PingResponse'
+        total:
+          type: integer
+          format: int64
+    Violation:
+      title: Violation
+      type: object
+      properties:
+        desc:
+          type: string
+        level:
+          type: string

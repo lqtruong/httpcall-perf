@@ -1,0 +1,30 @@
+server:
+  port: 8081
+  servlet.context-path: /
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sample
+    username: root
+    password: 123456@A
+  jpa:
+    show-sql: true
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /docs
+  api-docs:
+    enabled: true
+
+rest:
+  poll-api: http://localhost:8080/long-polling
+
+scheduled:
+  cron: '*/10 * * * * *'
+  # * / 10 * * * * * : every 10 seconds
+  # 0 */1 * * * * : every 1 minute
+  pool:
+    core-pool-size: 1000
+    max-pool-size: 2000
+    queue-capacity: 10000

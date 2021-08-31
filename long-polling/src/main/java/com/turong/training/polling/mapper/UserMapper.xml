@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.turong.training.polling.mapper.UserMapper">
+
+    <insert id="insertBatch"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            parameterType="com.turong.training.polling.entity.User">
+        insert into users (
+            username,
+            email,
+            created_at,
+            modified_at
+        ) values
+        <foreach collection="users" item="item" separator=",">
+            (#{item.username}, #{item.email}, now(), now())
+        </foreach>
+    </insert>
+
+    <update id="updateBatch" parameterType="java.util.List">
+        <if test="users != null and users.size() > 0">
+            update users
+            <trim prefix="set" suffixOverrides=",">
+                <trim prefix="feedback = case" suffix="end,">
+                    <foreach collection="users" item="item">
+                        <if test="item.feedback != null">
+                            when id = #{item.id} then #{item.feedback}
+                        </if>
+                    </foreach>
+                </trim>
+                <trim prefix="username = case" suffix="end,">
+                    <foreach collection="users" item="item">
+                        <if test="item.username != null">
+                            when id = #{item.id} then #{item.username}
+                        </if>
+                    </foreach>
+                </trim>
+                <trim prefix="email = case" suffix="end,">
+                    <foreach collection="users" item="item">
+                        <if test="item.email != null">
+                            when id = #{item.id} then #{item.email}
+                        </if>
+                    </foreach>
+                </trim>
+                modified_at = now()
+            </trim>
+            <where>
+                <foreach collection="users" item="item" separator="or">
+                    id = #{item.id}
+                </foreach>
+            </where>
+        </if>
+    </update>
+
+</mapper>
