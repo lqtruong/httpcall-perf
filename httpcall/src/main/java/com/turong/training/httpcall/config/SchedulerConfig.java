@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 public class SchedulerConfig {
 
     @Bean
-    @ConfigurationProperties(prefix = "scheduled.pool")
+    @ConfigurationProperties(prefix = "httpcall.scheduled.pool")
     public ThreadPoolConfig threadPoolConfig() {
         return new ThreadPoolConfig();
     }

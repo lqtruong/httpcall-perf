@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.turong.training.httpcall.mapper.PollMapper">
+
+    <insert id="insertPollsByDay"
+            parameterType="java.util.List"
+            useGeneratedKeys="true" keyProperty="polls.id">
+        insert into ${table} (
+        poll,
+        poll_status,
+        reason
+        ) values
+        <foreach collection="polls" item="item" separator=",">
+            (#{item.poll}, #{item.pollStatus}, #{item.reason})
+        </foreach>
+    </insert>
+
+    <select id="countAll" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+            count(*)
+        from ${table}
+        <where>
+            <if test="pollStatus != null and pollStatus != ''">
+                poll_status=#{pollStatus}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteAll" parameterType="java.util.Map">
+        delete from ${table}
+    </delete>
+
+    <select id="selectAll" parameterType="java.util.Map" resultType="com.turong.training.httpcall.entity.Poll">
+        select * from ${table}
+        <where>
+            <if test="pollStatus != null and pollStatus != ''">
+                poll_status=#{pollStatus}
+            </if>
+        </where>
+        <if test="rows>0">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <update id="updateBatch" parameterType="java.util.List">
+        <if test="polls != null and polls.size() > 0">
+            update
+                ${table}
+            <trim prefix="set" suffixOverrides=",">
+                <trim prefix="poll = case" suffix="end,">
+                    <foreach collection="polls" item="item">
+                        <if test="item.poll != null">
+                            when id = #{item.id} then #{item.poll}
+                        </if>
+                    </foreach>
+                </trim>
+                <trim prefix="poll_status = case" suffix="end,">
+                    <foreach collection="polls" item="item">
+                        <if test="item.pollStatus != null">
+                            when id = #{item.id} then #{item.pollStatus}
+                        </if>
+                    </foreach>
+                </trim>
+                <trim prefix="reason = case" suffix="end,">
+                    <foreach collection="polls" item="item">
+                        <if test="item.reason != null">
+                            when id = #{item.id} then #{item.reason}
+                        </if>
+                    </foreach>
+                </trim>
+                modified_at = now()
+            </trim>
+            <where>
+                <foreach collection="polls" item="item" separator="or">
+                    id = #{item.id}
+                </foreach>
+            </where>
+        </if>
+    </update>
+
+</mapper>

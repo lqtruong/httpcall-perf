@@ -17,14 +17,14 @@ springdoc:
   api-docs:
     enabled: true
 
-rest:
-  poll-api: http://localhost:8080/long-polling
 
-scheduled:
-  cron: '*/10 * * * * *'
-  # * / 10 * * * * * : every 10 seconds
-  # 0 */1 * * * * : every 1 minute
-  pool:
-    core-pool-size: 1
-    max-pool-size: 1
-    queue-capacity: -1
+httpcall:
+  poll-api: http://localhost:8080/long-polling
+  scheduled:
+    cron: '*/15 * * * * *'
+    # '*/10 * * * * *' : every 10 seconds
+    # '0 */1 * * * *' : every 1 minute
+    pool:
+      core-pool-size: 1
+      max-pool-size: 1
+      queue-capacity: -1

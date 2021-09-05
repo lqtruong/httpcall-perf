@@ -1,4 +1,4 @@
-package com.turong.training.httpcall.schedule;
+package com.turong.training.polling.controller;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
