@@ -25,6 +25,6 @@ scheduled:
   # * / 10 * * * * * : every 10 seconds
   # 0 */1 * * * * : every 1 minute
   pool:
-    core-pool-size: 1000
-    max-pool-size: 2000
-    queue-capacity: 10000
+    core-pool-size: 1
+    max-pool-size: 1
+    queue-capacity: -1

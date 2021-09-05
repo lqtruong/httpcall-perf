@@ -1,5 +1,8 @@
 package com.turong.training.httpcall.config;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 @EnableScheduling
 @Slf4j
-public class SchedulingConfig {
+public class SchedulerConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "scheduled.pool")
@@ -26,7 +29,7 @@ public class SchedulingConfig {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(threadPoolConfig.getCorePoolSize());
         executor.setMaxPoolSize(threadPoolConfig.getMaxPoolSize());
-        executor.setQueueCapacity(threadPoolConfig.getQueueCapacity());
+        // executor.setQueueCapacity(threadPoolConfig.getQueueCapacity());
         executor.setThreadNamePrefix("httpLongPollingExecutor-");
         executor.initialize();
         return executor;
@@ -36,6 +39,17 @@ public class SchedulingConfig {
     public RestTemplate restTemplate() {
         RestTemplate template = new RestTemplate();
         return template;
+    }
+
+    @Getter
+    @Setter
+    @ToString
+    static class ThreadPoolConfig {
+
+        private int corePoolSize;
+        private int maxPoolSize;
+        private int queueCapacity;
+
     }
 
 }

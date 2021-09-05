@@ -27,7 +27,7 @@ public class PollingScheduler {
 
     @Scheduled(cron = "${scheduled.cron:0 */10 * * * *}")
     public void doPoll() {
-        log.info("Start to poll");
+        log.info("Start to poll, active count:{}", httpPoolExecutor.getActiveCount());
 
         // fetch 1k not updated records from MySQL, send to external endpoint
         IntStream.range(0, 1000).forEach(i -> httpPoolExecutor.submit(new HttpCallTask(url, restTemplate)));
